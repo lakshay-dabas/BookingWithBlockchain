@@ -28,19 +28,15 @@ app.use(express.json());  //middleware for json payload parsing
 
 
 app.get('/index',(req,res) => {
-    console.log('I got it');
     res.render('index');//data of counts of successful transaction will be passed
 })
 app.get('/services',(req,res) => {
-    console.log('I got it');
     res.render('services');//data of counts of successful transaction will be passed
 })
 app.get('/hotel',(req,res) => {
-    console.log('I got it');
     res.render('hotel');//data of counts of successful transaction will be passed
 })
 app.get('/contact',(req,res) => {
-    console.log('I got it');
     res.render('contact');//data of counts of successful transaction will be passed
 })
 

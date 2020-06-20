@@ -1,0 +1,25 @@
+1. giving 5 min window for contract to complete
+    smart contract need to triggered after a room is booked by a customer to check if hotel confirmed
+    his/her booking, bcz it may  happen hotel didmt pay intentionally or unintentially
+
+    triggering smart contract evenry 5 min can be done by hotel backend side but i.e gonna be risky as we after
+    dependent on hotel
+
+    we decided to trigger smart contracts every five minutes by another service only doing this job 
+    and is independent of any hotel
+
+    triggering opertion may consume gas so, we are making it a view function to check if any pending
+    contract need to be cancelled in which hotel didnt pay in 5 minutes
+
+    if count of pending contracts not completed is >0 then a gas cnsuming transaction is perfomed
+    to deleted the contracts
+
+    contracts array will not get flooded as in 100,00,00 booking bcz atleast one is not completed by hotel
+    then contract array will be updated
+
+2. customer should pay first bcz paying gets gas fee involeved, if hotel pays first then customer may
+    cancel it and hotel gas fee will be losed and customer can do it again and again
+
+3. hotels will not do this kind of activity often as they want their room to be booked
+    and in future version we can also keep track of their ratings on basis of their performance
+

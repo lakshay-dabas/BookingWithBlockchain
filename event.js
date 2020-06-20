@@ -1,8 +1,27 @@
 const Web3 = require('web3');
-const web3 = new Web3('https://ropsten.infura.io/v3/96beb9df66384d07991430e7fa44a4a2');
+const web3 = new Web3('wss://ropsten.infura.io/ws/v3/96beb9df66384d07991430e7fa44a4a2');
 const Tx = require('ethereumjs-tx'); //module for creating, manipulating and signing transaction
 
 const abi = [
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_firstName",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_lastName",
+				"type": "string"
+			}
+		],
+		"name": "memberAdded",
+		"type": "event"
+	},
 	{
 		"constant": false,
 		"inputs": [
@@ -88,7 +107,7 @@ const abi = [
 const privateKey = '8e05ecf21d5c508b6886c17685954989bff3f0fd9b51c03407af5d425fe0f25d';
 const PRIVATE_KEY_1 = Buffer.from(privateKey,'hex');//convert in hex form
 // console.log(PRIVATE_KEY_1)
-const contractAddress = '0xf8B5aBf274e9C976378937ec583aAaff2a6283aC';
+const contractAddress = '0x246d8D9185D1B94897d0D560497613193e66Ea75';
 const account = web3.eth.accounts.privateKeyToAccount(privateKey)
 
 // console.log(account);
@@ -96,7 +115,11 @@ const account = web3.eth.accounts.privateKeyToAccount(privateKey)
 web3.eth.defaultAccount  = account.address;
 
 const contract = new web3.eth.Contract(abi, contractAddress);
-// console.log(contract.methods.giveCount())
+
+
+contract.events.memberAdded({fromBlock : 8124353})
+	.on('data', event => console.log(event));
+
 
 const func = contract.methods.addPeople('vipin','yadav');
 
@@ -133,7 +156,7 @@ web3.eth.getTransactionCount(account.address)
         const raw = '0x' + serializedTransaction.toString('hex');
         // console.log(raw);
         web3.eth.sendSignedTransaction(raw)
-            .then(info => console.log(info))
+            .then(info => console.log('info'))
             .catch(err => console.log(err));
     })
-    .catch(err => console.log(err));
+	.catch(err => console.log(err));

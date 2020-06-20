@@ -18,9 +18,9 @@ app.set('view engine', 'handlebars');//setting view engine to handlbars engine (
 
 
 //mongo-db connection
-mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser : true,useUnifiedTopology: true})
-    .then(() => console.log('Mongo DB connected'))
-    .catch((err) => console.log(err));
+// mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser : true,useUnifiedTopology: true})
+//     .then(() => console.log('Mongo DB connected'))
+//     .catch((err) => console.log(err));
 
 //we are using this to parse form data
 app.use(express.urlencoded( {extended : true}));
@@ -45,7 +45,7 @@ app.get('/contact',(req,res) => {
 app.use(express.static(path.join(__dirname ,'public')));
 
 //port listening
-const PORT  = process.env.PORT | 3000;
+const PORT  = process.env.PORT | 3001;
 app.listen(PORT, () => {
     console.log('Listening at port ' + PORT);
 })

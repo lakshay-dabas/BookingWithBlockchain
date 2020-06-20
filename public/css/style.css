@@ -8328,7 +8328,7 @@ div.cs-select span {
 }
 .feature-full-2col .f-hotel {
   float: left;
-  width: 50%;
+  width: 100%;
   position: relative;
   overflow: hidden;
   display: -webkit-box;

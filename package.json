@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^8.2.0",
+    "emailjs": "^3.2.1",
     "ethereumjs-tx": "^1.3.7",
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",

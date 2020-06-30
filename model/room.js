@@ -1,18 +1,35 @@
 const mongoose = require('mongoose');
 
-const customerSchema = new mongoose.Schema({
+//getting query
+//good time and low complexity
+
+//update query
+//easy
+
+//delete query
+//easy
+
+const roomSchema = new mongoose.Schema({
     id : {
         index : true,
+        type : Number,
+        require : true
+    },
+    type: {
         type : String,
         require : true
     },
-    Description: {
-        type : String
+    price : {
+        type : Number,
+        require : true
     },
-    booked
+    booked:{
+        type : Boolean,
+        require : true
+    }
 
 });
 
-const customerModel = mongoose.model('customer', customerSchema);
+const roomModel = mongoose.model('room', roomSchema);
 
-module.exports = customerModel;
+module.exports = roomModel;

@@ -3,12 +3,13 @@ const Web3 = require('web3');
 const web3 = new Web3('wss://ropsten.infura.io/ws/v3/96beb9df66384d07991430e7fa44a4a2');
 const Tx = require('ethereumjs-tx'); //module for creating, manipulating and signing transaction
 const { connect } = require('mongoose');
-const smartContractHelper = require('./smartContractHelper');
 require('dotenv').config();
 
+//self made modules
+const smartContractHelper = require('./smartContractHelper');
+const abi = require('./abi')
 
 //environment variables
-const abi = process.env.ABI;
 const privateKey = process.env.PRIVATE_KEY;
 const PRIVATE_KEY_1 = Buffer.from(privateKey,'hex');//convert in hex form
 const contractAddress = process.env.CONTRACT_ADDRESS;

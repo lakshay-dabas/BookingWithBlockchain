@@ -19,12 +19,10 @@ const bookingSchema = new mongoose.Schema({
         require : true
     },
     checkInDate : {
-        type : Date,
-        default : bookingStartDate
+        type : Date
     },
     chckOutDate : {
-        type : Date,
-        default : bookingEndDate
+        type : Date
     },
     status : {//status of customer, on checkout or bookingEndDate this should be changed to false
         type : Boolean,

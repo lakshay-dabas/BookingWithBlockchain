@@ -115,9 +115,9 @@ app.post('/index', (req,res) => {
 
 
 //event listeners
-setInterval(() => {
-	eventListener()
-}, 10*1000);  //every ten seconds we will call this event listener 
+// setInterval(() => {
+// 	eventListener()
+// }, 10*1000);  //every ten seconds we will call this event listener 
 
 
 //port listening

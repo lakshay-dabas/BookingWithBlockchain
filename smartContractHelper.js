@@ -64,7 +64,7 @@ function sendTransaction(funcAbi,contractAddress,PRIVATE_KEY_1,account, roomId) 
 
 
 
-const abi = process.env.ABI;
+const abi = require('./abi');
 
 const PRIVATE_KEY_1 = Buffer.from(process.env.PRIVATE_KEY,'hex');//convert in hex form
 

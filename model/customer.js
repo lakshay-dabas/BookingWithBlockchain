@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bookingSchema = require('booking');
+const bookingSchema = require('./booking');
 
 
 //getting query

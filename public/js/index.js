@@ -21,6 +21,6 @@ window.addEventListener('load', async (event) => {
     }
 })
 
-web3.eth.sendTransaction({to : '0x1142510Eab39FE0BD8B033A80B2e34431C38DD64', value :  web3.utils.toHex(web3.utils.toWei('0.001','ether'))})
-    .then(res => console.log(res))
-    .catch(err => console.log(err));
+// web3.eth.sendTransaction({to : '0x1142510Eab39FE0BD8B033A80B2e34431C38DD64', value :  web3.utils.toHex(web3.utils.toWei('0.001','ether'))})
+//     .then(res => console.log(res))
+//     .catch(err => console.log(err));

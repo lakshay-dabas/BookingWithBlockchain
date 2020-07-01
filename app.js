@@ -51,7 +51,9 @@ app.get('/hotel',(req,res) => {
 app.get('/contact',(req,res) => {
     res.render('contact');//data of counts of successful transaction will be passed
 })
-
+app.get('/submitPin', (req,res) => {
+    res.render('submitPin');
+})
 
 app.post('/index', (req,res) => {
     console.log(req.body);
@@ -107,7 +109,7 @@ app.post('/index', (req,res) => {
 
         //roomID status is set to booked
 
-    res.redirect('index');
+    res.redirect('sumitPin');
 })
 //on checkIn,if checkin is not done on start 
     //checkIn code is provided to hotel, then hotel can recieve payment
@@ -115,9 +117,8 @@ app.post('/index', (req,res) => {
 
 
 //event listeners
-// setInterval(() => {
-// 	eventListener()
-// }, 10*1000);  //every ten seconds we will call this event listener 
+//PORBLEM
+// eventListener()
 
 
 //port listening

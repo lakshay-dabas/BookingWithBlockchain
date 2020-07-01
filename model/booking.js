@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
-    contractId : {
+    _id : {  //contractId
         index : true,
         type : String,
         required : true
@@ -21,11 +21,11 @@ const bookingSchema = new mongoose.Schema({
     checkInDate : {
         type : Date
     },
-    chckOutDate : {
+    checkOutDate : {
         type : Date
     },
     status : {//status of customer, on checkout or bookingEndDate this should be changed to false
-        type : Boolean,
+        type : String,
         default: true
     }
 });

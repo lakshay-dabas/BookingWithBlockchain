@@ -6,8 +6,13 @@ const { connect } = require('mongoose');
 require('dotenv').config();
 
 //self made modules
-const smartContractHelper = require('./smartContractHelper');
-const abi = require('./abi')
+const {bookRoom,hotelAgreeToPay} = require('./smartContractHelper');
+const abi = require('./abi');
+
+//DB import 
+const roomModel = require('./model/room');
+const customerModel = require('./model/customer');
+const { eventNames } = require('./model/booking');
 
 //environment variables
 const privateKey = process.env.PRIVATE_KEY;
@@ -22,34 +27,94 @@ const contract = new web3.eth.Contract(abi, contractAddress);
 //EVENT LISTENERS
 
 const eventListener = () => {
-
+	//TESTING NEEDED
 	contract.events.customerPaidBookingAmount({fromBlock : 8124353})
 		.on('data', event => {
 			console.log(event);
-			//its time for hotel to check the contract reuqest and conform it
-			//PROBLEM
+			//see if roomType required by customer is empty, if empty allocated him a one
+			const roomType = event.returnValues.roomType;
+			let roomAlloted = -1;		
+	
+			roomModel.findOne({type : roomType, booked : false})
+				.then(room => {
+					roomAlloted = room.id;
+					room.booked = true;
+					room.save();
+				})
+			if (roomAlloted == -1){
+				return;
+			}
+			hotelAgreeToPay(event.returnValues.contractId, roomAlloted);
 		})
-
+	//TESTING NEEDED
 	contract.events.hotelPaidTenPercentOfBookingAmount({fromBlock : 8124353})
 		.on('data', event => {
 			console.log(event);
-			//its time to ask user for PIN
-			//redirect to a page having booking info and pin enter button
-			//PROBLEM
+			//we can make a flag i booking DB, denoting that now user can submit the pin and conform the booking
+			const email = event.returnValues.email;
+			const contractId = event.returnValues.contractId;
+			customerModel.findOne({email})
+				.then(customer => {
+					customer.booking.id(contractId)
+						.then(booking => {
+							booking.finalStep = true;  //this indicate now customer can submit pin
+							customer.save();
+						})
+						.catch(err  => console.log(err));
+				})
+				.catch(err => console.log(err));
 		})
 
+	//TESTING NEEDED
 	contract.events.hotelCancelledBooking({fromBlock : 8124353})
 		.on('data', event => {
 			console.log(event);
 			//get roomId, make it free and update customer booking status to cancelled by hotel
-			//PROBLEM
+			const roomAlloted = event.returnValues.roomId;
+			const email = event.returnValues.email; //PROBLEM need to decrypt it 
+			roomModel.findOne({id : roomAlloted})
+				.then(room => {
+					room.booked = false;
+					room.save();
+				})
+				.catch(err => console.log(err));
+			
+			customerModel.findOne({email})
+				.then(customer => {
+					customer.booking.id(event.returnValues.contractId)	
+						.then(booking => {
+							booking.status = "Cancelled by hotel";
+							customer.save();
+						})
+						.catch(err => console.log(err));
+				})
+				.catch(err => console.log(err));
+
 		})
 
-
+	//TESTING NEEDED
 	contract.events.customerCancelledBooking({fromBlock : 8124353})
-	.on('data', event => {
-		console.log(event);
-		//get roomId, make it free and update customer booking status to cancelled by customer
-		//PROBLEM
-	})
+		.on('data', event => {
+			console.log(event);
+			const roomAlloted = event.returnValues.roomId;
+			const email = event.returnValues.email; //PROBLEM need to decrypt it 
+			roomModel.findOne({id : roomAlloted})
+				.then(room => {
+					room.booked = false;
+					room.save();
+				})
+				.catch(err => console.log(err));
+			
+			customerModel.findOne({email})
+				.then(customer => {
+					customer.booking.id(event.returnValues.contractId)	
+						.then(booking => {
+							booking.status = "Cancelled by customer";
+							customer.save();
+						})
+						.catch(err => console.log(err));
+				})
+				.catch(err => console.log(err));
+
+			})
 }

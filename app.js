@@ -15,7 +15,7 @@ app.set('view engine', 'handlebars');//setting view engine to handlbars engine (
 
 //helper function 
 const {transer} = require('./helperFunc');
-const smartContractHelper = require('./smartContractHelper');
+const {bookRoom,hotelAgreeToPay,sendPinTransaction} = require('./smartContractHelper');
 const eventListener = require('./listener');
 
 //Database Model import
@@ -38,7 +38,7 @@ app.use(express.urlencoded( {extended : true}));
 app.use(express.static(path.join(__dirname ,'public')));
 
 
-//routing to pages
+//GET request
 app.get('/index',(req,res) => {
     res.render('index');//data of counts of successful transaction will be passed
 })
@@ -53,6 +53,28 @@ app.get('/contact',(req,res) => {
 })
 app.get('/submitPin', (req,res) => {
     res.render('submitPin');
+})
+//TESTING NEEDED
+//POST request
+app.post('/submitPin', (req,res) => {
+    const pin = req.body.pin;
+    const contractId = req.body.contractId;
+    const email = req.body.email;
+    //check if this customer booking is in last stage
+    customerModel.findOne({email})
+        .then(customer => {
+            customer.booking.id(contractId)
+                .then(booking => {
+                    if (booking.final == true){
+                        sendPinTransaction(contractId, pin);
+                    }
+                    else{
+                        res.render('submitPin', {msg : 'Your booking hasnt reached pin submition stage'}).status(400);
+                    }
+                })
+                .catch(err => console.log(err));
+        })
+        .catch(err => console.log(err));
 })
 
 app.post('/index', (req,res) => {

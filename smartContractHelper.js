@@ -64,6 +64,10 @@ function sendTransaction(funcAbi,contractAddress,PRIVATE_KEY_1,account, roomId) 
 
 
 
+function sendPinTransaction(){
+	
+}
+
 const abi = require('./abi');
 
 const PRIVATE_KEY_1 = Buffer.from(process.env.PRIVATE_KEY,'hex');//convert in hex form
@@ -115,4 +119,4 @@ function hotelAgreeToPay(contractId,roomId){
 	sendTransaction(funcAbi, contractAddress, PRIVATE_KEY_1, account,roomId);
 }
 
-module.exports = {bookRoom,hotelAgreeToPay};
+module.exports = {bookRoom,hotelAgreeToPay,sendPinTransaction};

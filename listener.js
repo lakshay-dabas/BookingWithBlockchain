@@ -66,6 +66,25 @@ const eventListener = () => {
 		})
 
 	//TESTING NEEDED
+	contract.events.pinChecked({fromBlock : 8124353})
+		.on('data', event => {
+			console.log(event);
+			const contractId = event.returnValues.contractId;
+			const email = event.returnValues.email;
+
+			customerModel.findOne({email})
+				.then(customer => {
+					customer.booking.id(event.returnValues.contractId)	
+						.then(booking => {
+							booking.status = "Booking confirmed";
+							customer.save();
+						})
+						.catch(err => console.log(err));
+				})
+				.catch(err => console.log(err));
+		})
+
+	//TESTING NEEDED
 	contract.events.hotelCancelledBooking({fromBlock : 8124353})
 		.on('data', event => {
 			console.log(event);

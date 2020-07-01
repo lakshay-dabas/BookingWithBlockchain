@@ -113,7 +113,6 @@ console.log(funcAbi);
 //     })
 //     .catch(err => console.log(err));
 
-
 web3.eth.getTransactionCount(account.address)
     .then(txCount => {
         console.log(txCount);

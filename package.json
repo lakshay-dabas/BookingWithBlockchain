@@ -18,7 +18,10 @@
     "express": "^4.17.1",
     "express-handlebars": "^4.0.4",
     "mongoose": "^5.9.19",
+    "node-rsa": "^1.0.8",
     "path": "^0.12.7",
+    "request-promise": "^4.2.5",
+    "socket.io": "^2.3.0",
     "web3": "^1.2.9"
   },
   "devDependencies": {

@@ -23,3 +23,16 @@
 3. hotels will not do this kind of activity often as they want their room to be booked
     and in future version we can also keep track of their ratings on basis of their performance
 
+4.as hotel can do malpratcices like sending wrong info to smart contract on behalf of payment through
+metamask, so a middleware party is made which will act as intermeditary b/w hotels and customers
+and smart contract can be invoked only by that third party in right manner
+
+5.showing sensitive contract info like customer name, email, booking details to all, not a good point
+so sensitive info can be necrypted using private key associated with that hotel,
+so that hotel ans us can decrypt the sensitive info and we can make the contract info public
+
+6. as new hotel get added we have to make new private public key pair
+
+7. while sending email to customer, our system can go down the email in the queue will be lost,
+so email send falg is maintained in DB, so that when our system comes up we can send email of entities 
+that are needed

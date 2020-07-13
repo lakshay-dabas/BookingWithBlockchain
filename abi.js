@@ -1,38 +1,13 @@
 const abi = [
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "customerAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "contractId",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint32",
-				"name": "roomId",
-				"type": "uint32"
-			}
-		],
-		"name": "customerCancelledBooking",
-		"type": "event"
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
 	},
 	{
 		"anonymous": false,
 		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "customerAddress",
-				"type": "address"
-			},
 			{
 				"indexed": false,
 				"internalType": "address",
@@ -46,7 +21,7 @@ const abi = [
 				"type": "uint256"
 			}
 		],
-		"name": "customerCheckIn",
+		"name": "contractComplete",
 		"type": "event"
 	},
 	{
@@ -61,7 +36,51 @@ const abi = [
 			{
 				"indexed": false,
 				"internalType": "address",
-				"name": "customerAddress",
+				"name": "hotelAddress",
+				"type": "address"
+			}
+		],
+		"name": "contractExpired",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "contractId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "roomId",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "hotelAddress",
+				"type": "address"
+			}
+		],
+		"name": "customerCancelledBooking",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "contractId",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "hotelAddress",
 				"type": "address"
 			},
 			{
@@ -69,12 +88,6 @@ const abi = [
 				"internalType": "uint256",
 				"name": "amount",
 				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint32",
-				"name": "roomId",
-				"type": "uint32"
 			},
 			{
 				"indexed": false,
@@ -87,6 +100,24 @@ const abi = [
 				"internalType": "uint256",
 				"name": "endDate",
 				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "refundDate",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "roomType",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "customerEmail",
+				"type": "string"
 			}
 		],
 		"name": "customerPaidBookingAmount",
@@ -109,9 +140,9 @@ const abi = [
 			},
 			{
 				"indexed": false,
-				"internalType": "uint32",
+				"internalType": "string",
 				"name": "roomId",
-				"type": "uint32"
+				"type": "string"
 			}
 		],
 		"name": "hotelCancelledBooking",
@@ -128,21 +159,93 @@ const abi = [
 			},
 			{
 				"indexed": false,
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
+				"internalType": "string",
+				"name": "roomId",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "hotelAddress",
+				"type": "address"
 			}
 		],
 		"name": "hotelPaidTenPercentOfBookingAmount",
 		"type": "event"
 	},
 	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "allContracts",
+		"outputs": [
+			{
+				"internalType": "address payable",
+				"name": "customerAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "address payable",
+				"name": "hotelAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "roomId",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "startDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "endDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "refundDate",
+				"type": "uint256"
+			},
+			{
+				"internalType": "enum hotelContract.State",
+				"name": "state",
+				"type": "uint8"
+			},
+			{
+				"internalType": "string",
+				"name": "roomType",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "customerEmail",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"constant": false,
 		"inputs": [
 			{
-				"internalType": "uint32",
-				"name": "_roomId",
-				"type": "uint32"
+				"internalType": "string",
+				"name": "_roomType",
+				"type": "string"
 			},
 			{
 				"internalType": "uint256",
@@ -158,6 +261,16 @@ const abi = [
 				"internalType": "address payable",
 				"name": "_hotelAddress",
 				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "_email",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_secretKey",
+				"type": "string"
 			}
 		],
 		"name": "bookRoom",
@@ -197,89 +310,14 @@ const abi = [
 		"type": "function"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_contractId",
-				"type": "uint256"
-			}
-		],
-		"name": "checkIn",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "deleteExpiredContracts",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_contractId",
-				"type": "uint256"
-			}
-		],
-		"name": "hotelAgreeToPay",
-		"outputs": [],
-		"payable": true,
-		"stateMutability": "payable",
-		"type": "function"
-	},
-	{
 		"constant": true,
-		"inputs": [
+		"inputs": [],
+		"name": "countCompleteContract",
+		"outputs": [
 			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"name": "allContracts",
-		"outputs": [
-			{
-				"internalType": "address payable",
-				"name": "customerAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "address payable",
-				"name": "hotelAddress",
-				"type": "address"
-			},
-			{
-				"internalType": "uint32",
-				"name": "roomId",
-				"type": "uint32"
-			},
-			{
-				"internalType": "uint256",
-				"name": "amount",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "startDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "endDate",
-				"type": "uint256"
-			},
-			{
-				"internalType": "enum hotelContract.State",
-				"name": "state",
-				"type": "uint8"
 			}
 		],
 		"payable": false,
@@ -295,6 +333,179 @@ const abi = [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "deleteCompleteContract",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "deleteExpiredContracts",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "getAllContracts",
+		"outputs": [
+			{
+				"internalType": "uint256[]",
+				"name": "",
+				"type": "uint256[]"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_contractId",
+				"type": "uint256"
+			}
+		],
+		"name": "getCustomerAddressInContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_contractId",
+				"type": "uint256"
+			}
+		],
+		"name": "getEndDateOfBooking",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_contractId",
+				"type": "uint256"
+			}
+		],
+		"name": "getHotelAddressInContract",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_contractId",
+				"type": "uint256"
+			}
+		],
+		"name": "getRoomIdInContract",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_contractId",
+				"type": "uint256"
+			}
+		],
+		"name": "getStartDateOfBooking",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_contractId",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_roomId",
+				"type": "string"
+			}
+		],
+		"name": "hotelAgreeToPay",
+		"outputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
 			}
 		],
 		"payable": false,

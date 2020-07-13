@@ -1,26 +1,70 @@
-// const { default: Web3 } = require("web3");
+const socket = io('/');
+// const socket = io({transports: ['websocket'], upgrade: false});
 
-// import Web3 from 'web3';
-let web3;
+socket.on('connect', () => {
+    // console.log(window.location.href);
+    // console.log(socket.id); // 'G5p5...'
+  });
 
-window.addEventListener('load', async (event) => {
-    console.log('loading');
-    event.preventDefault();
-    if(window.ethereum){//for latest version of metamask
-        console.log('yes');
-        web3 = new Web3(window.ethereum);
-        await window.ethereum.enable();
+socket.on('disconnect', () => {
+    // console.log('disconnect '+ socket.id);
+    socket.removeAllListeners();
+ });
+
+socket.on('sendMetamaskTransaction',(o) => {
+  const {paymentAddress, amountEth, funcAbi} = o;
+  console.log('send Metamask transasction called');
+  console.log(paymentAddress);
+  console.log(amountEth);
+  console.log(funcAbi);
+  web3.eth.sendTransaction({
+    to: paymentAddress,
+    value: web3.toWei(amountEth, 'ether'),
+    data : funcAbi,
+    gasLimit : web3.toHex(2100000),
+    gasPrice : web3.toHex(web3.toWei('10','gwei'))
+  }, (err, transactionId) => {
+    if  (err) {
+      console.log('Payment failed', err)
+    } else {
+      console.log('Payment successful', transactionId)
     }
-    else if(window.web3){//for old version of metamask and other wallets
-        web3 = new Web3(window.web3.currentProvider); //provider is any module whichenables us to connct to ethereum network
-        //like metamask, other wallets
-        //no need to enable it 
+  })
+});
+
+window.addEventListener('load', async () => {
+  if (window.ethereum) {
+    window.web3 = new Web3(ethereum);
+    try {
+      await ethereum.enable();
+      // initPayButton()
+    } catch (err) {
+      $('#status').html('User denied account access', err)
     }
-    else{
-        console.log('install metamask');
-    }
+  } else if (window.web3) {
+    window.web3 = new Web3(web3.currentProvider)
+  //   initPayButton()
+  } else {
+      console.log('Install Metamask');
+  }
 })
 
-// web3.eth.sendTransaction({to : '0x1142510Eab39FE0BD8B033A80B2e34431C38DD64', value :  web3.utils.toHex(web3.utils.toWei('0.001','ether'))})
-//     .then(res => console.log(res))
-//     .catch(err => console.log(err));
+
+const bookForm = document.getElementById("book-room");
+
+bookForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const roomType = event.target.elements.roomType.value;
+  const email = event.target.elements.email.value;
+  const startDate = event.target.elements.startDate.value;
+  const endDate = event.target.elements.endDate.value;
+  // console.log(event.target.elements.roomType.value);
+  const o ={
+    roomType,
+    email,
+    startDate,
+    endDate
+  }
+  // console.log(o)
+  socket.emit('book-room',o);
+})

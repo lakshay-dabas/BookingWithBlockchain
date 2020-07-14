@@ -1,8 +1,71 @@
-{{#if msg}}
-    <div class="alert alert-warning" role="alert">
-        <strong>{{this}}</strong>
-    </div>
 
-{{/if}}
 
-{{{body}}}
+<!DOCTYPE html>
+	<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>LuCxe </title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" href="favicon.ico">
+
+	<link rel="stylesheet" href="css/superfish.css">
+
+	<link rel="stylesheet" href="css/bootstrap-datepicker.min.css">
+	<!-- CS Select -->
+	<link rel="stylesheet" href="css/cs-select.css">
+	<link rel="stylesheet" href="css/cs-skin-border.css">
+
+	<!-- Themify Icons -->
+	<link rel="stylesheet" href="css/themify-icons.css">
+	<!-- Flat Icon -->
+	<link rel="stylesheet" href="css/flaticon.css">
+	<!-- Icomoon -->
+	<link rel="stylesheet" href="css/icomoon.css">
+	<!-- Flexslider  -->
+	<link rel="stylesheet" href="css/flexslider.css">
+	
+	<!-- Style -->
+	<link rel="stylesheet" href="css/style.css">
+
+	<!-- Modernizr JS -->
+	<script src="js/modernizr-2.6.2.min.js"></script>
+
+
+</head>
+<body>
+    {{#if msg}}
+        <div class="alert alert-warning" role="alert">
+            <strong>{{this}}</strong>
+        </div>
+
+    {{/if}}
+	<div id="fh5co-header">
+		<header id="fh5co-header-section">
+			<div class="container">
+				<div class="nav-header">
+					<a href="#" class="js-fh5co-nav-toggle fh5co-nav-toggle"><i></i></a>
+					<h1 id="fh5co-logo"><a href="/index">LuCxe</a></h1>
+					<nav id="fh5co-menu-wrap" role="navigation">
+						<ul class="sf-menu" id="fh5co-primary-menu">
+							<li><a class="active" href="/index">Home</a></li>
+							<li>
+								<a class="fh5co-sub-ddown">Suites</a>
+								<ul class="fh5co-sub-menu">
+								 	<li><a href="#">Queen Suite</a></li>
+								 	<li><a href="#">Studio Suite</a></li>
+									<li><a href="#">Pent House</a></li> 
+								</ul>
+							</li>
+							<li><a href="/cancel-booking">Cancel Booking</a></li>
+							<li><a href="/services">Services</a></li>
+							<li><a href="/contact">Contact</a></li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</header>
+	</div>
+    
+    {{{body}}}
+</body>
+</html>

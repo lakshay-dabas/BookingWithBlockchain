@@ -30,6 +30,7 @@ mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser : true,useUnifiedTopolo
 
 const eventListener = require('./listener');
 const {allKeys} = require('./keys');
+const bookingModel = require('./model/booking');
 const allKeysObject = new allKeys();
 const publicKey = allKeysObject.getKey(process.env.HOTEL_ADDRESS)['public'];  //public key for encryption
 
@@ -151,6 +152,30 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         //roomID status is set to booked
         
     })
+
+
+    socket.on('cancel-booking',async o => {
+        const contractId = o.contractId;
+        console.log('backend', contractId)
+        try{
+            const booking = await bookingModel.findOne({contractId});
+            if((!booking) || booking.status != "approve by hotel"){
+                socket.emit('alert',{msg : 'No Active Contract with this contractId'});
+                return;
+            }
+            const contract = new web3.eth.Contract(require('./abi'), process.env.CONTRACT_ADDRESS);
+            const func = contract.methods.cancelBookingByCustomer(contractId);
+            const funcAbi = func.encodeABI();
+            const o1 = {
+                paymentAddress: process.env.CONTRACT_ADDRESS,
+                funcAbi
+            }
+            socket.emit('cancel-booking',o1);
+        }
+        catch(err){
+            console.log(err);
+        }
+    })
 });
 
 
@@ -167,37 +192,9 @@ app.get('/hotel',(req,res) => {
 app.get('/contact',(req,res) => {
     res.render('contact');//data of counts of successful transaction will be passed
 })
-app.get('/submitPin', (req,res) => {
-    res.render('submitPin');
+app.get('/cancel-booking', (req,res) => {
+    res.render('cancelBooking');
 })
-//TESTING NEEDED
-//POST request
-app.post('/submitPin', (req,res) => {
-    const pin = req.body.pin;
-    const contractId = req.body.contractId;
-    const email = req.body.email;
-    //check if this customer booking is in last stage
-    customerModel.findOne({email})
-        .then(customer => {
-            customer.booking.id(contractId)
-                .then(booking => {
-                    if (booking.final == true){
-                        sendPinTransaction(contractId, pin);
-                    }
-                    else{
-                        res.render('submitPin', {msg : 'Your booking hasnt reached pin submition stage'}).status(400);
-                    }
-                })
-                .catch(err => console.log(err));
-        })
-        .catch(err => console.log(err));
-})
-
-// app.post('/index', async (req,res) => {
-//     const {email,roomType,startDate, endDate} = req.body;
-//     //PROBLEM -> check if the input is correct or not
-    
-// })
 
 //checkIn -> how hotel can verify the customer is the one to whom we have made the contract
 //contractor, BWB -> must provide some identity detail of the customer like email, phone no, addhar no,

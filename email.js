@@ -21,6 +21,8 @@ function sendEmail(to, text){
     }
   );
 }
+
+// sendEmail('vipinyadav1041998@gmail.com','HELLO VIPIN');
 module.exports = {
   sendEmail
 }

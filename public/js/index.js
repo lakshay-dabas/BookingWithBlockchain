@@ -58,12 +58,14 @@ bookForm.addEventListener('submit', (event) => {
   const email = event.target.elements.email.value;
   const startDate = event.target.elements.startDate.value;
   const endDate = event.target.elements.endDate.value;
+  const roomNeeded = event.target.elements.roomNeeded.value;
   // console.log(event.target.elements.roomType.value);
   const o ={
     roomType,
     email,
     startDate,
-    endDate
+    endDate,
+    roomNeeded
   }
   // console.log(o)
   socket.emit('book-room',o);

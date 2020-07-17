@@ -53,14 +53,14 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
 
     socket.on('book-room', async(o) => {
         console.log(o)
-        const {roomType, email, startDate, endDate} = o;
+        const {roomType, roomNeeded, email, startDate, endDate} = o;
         let temp = startDate.split('/');
         console.log(temp)
-        const d1 = new Date(Number(temp[2]), Number(temp[0]), Number(temp[1]), 17, 30, 0,0);
+        const d1 = new Date(Number(temp[2]), Number(temp[0])-1, Number(temp[1]), 17, 30, 0,0);
         console.log(d1)
         temp = endDate.split('/');
         console.log(temp)
-        const d2 = new Date(Number(temp[2]), Number(temp[0]), Number(temp[1]), 17, 30 ,0,0 );
+        const d2 = new Date(Number(temp[2]), Number(temp[0])-1, Number(temp[1]), 17, 30 ,0,0 );
         let price = -1;
         console.log(d2)
         console.log(d1.toDateString())
@@ -79,12 +79,11 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         //check how many rooms of roomType are empty then allocate any one of them
         
         const options = {
-            uri : `https://hotel--backend.herokuapp.com/check-room-available?roomType=${roomType}`,
+            uri : `https://hotel--backend.herokuapp.com/check-room-available?roomType=${roomType}&startDate=${Date.parse(d1)}&endDate=${Date.parse(d2)}&roomNeeded=${roomNeeded}`,
             json: true,
             resolveWithFullResponse: true,
             method: 'GET',
             headers : {
-                'email' : email
             }
         }
         let haveRoom = false;
@@ -94,7 +93,7 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         }
         catch(err){
             console.log(err);
-            res.redirect('index');
+            // res.redirect('index');
         }
         // console.log(response)
         // s = response.req._header
@@ -130,13 +129,13 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         const key = new nodeRSA(publicKey);
         const eroomType = key.encrypt(roomType,'base64');
         const eemail = key.encrypt(email, 'base64');
-
+        const eroomNeeded = key.encrypt(roomNeeded, 'base64');
         const contract = new web3.eth.Contract(require('./abi'), process.env.CONTRACT_ADDRESS);
-        const func = contract.methods.bookRoom(eroomType,d1.getTime(),d2.getTime(),process.env.HOTEL_ADDRESS, eemail,process.env.SECRET_KEY);
+        const func = contract.methods.bookRoom(eroomType,eroomNeeded,d1.getTime(),d2.getTime(),process.env.HOTEL_ADDRESS, eemail,process.env.SECRET_KEY);
         const funcAbi = func.encodeABI();
         const o1 = {
             paymentAddress: process.env.CONTRACT_ADDRESS,
-            amountEth: amount*0.000054, 
+            amountEth: amount*roomNeeded*0.000054, 
             funcAbi
         }
         socket.emit('sendMetamaskTransaction',o1);

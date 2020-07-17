@@ -41,7 +41,10 @@ const eventListener = () => {
 				bookingEndDate :  event.returnValues.endDate,
 				amount : event.returnValues.amount,
 				roomType : key.decrypt(event.returnValues.roomType),
-				status : 'customer paid booking amount'
+				roomNeeded : key.decrypt(event.returnValues.roomNeeded),
+				status : 'customer paid booking amount',
+				emailSend : false,
+				fullRefundDate : event.returnValues.refundDate
 			})
 			booking.save();
 		})
@@ -62,16 +65,16 @@ const eventListener = () => {
 
 					const startDate= booking.bookingStartDate;
 					const endDate = booking.bookingEndDate;
-					const roomId = booking.roomId;
 					const emailSend = booking.emailSend;
 					const amount = booking.amount;
 					const hotelAddress = booking.hotelAddress;
 					const email = booking.customerEmail;
 					const fullRefundDate = booking.fullRefundDate;
+					const roomNeeded = booking.roomNeeded;
 					if (emailSend == False){
 						const text = `Dear Customer your booking is conformed and have contract ID = ${contractId}\n`+
 						`with hotel with ethereum Address  =${hotelAddress}\n`+
-						`You are alloted room number ${roomId} from ${startDate} to ${endDate}\n`+
+						`You are alloted ${roomNeeded} rooms from ${startDate} to ${endDate}\n`+
 						`You can cancel your booking till ...... \n`+
 						`In case of cancelling booking by hotel you will get this amount ${amount}\n`+
 						`You can recieve 95% refund on cancelling your booking till ${fullRefundDate}\n`+

@@ -32,8 +32,8 @@ const bookingSchema = new mongoose.Schema({
         type : Number,
         requrie : true
     },
-    roomId : {
-        type : String
+    roomNeeded : {
+        type : Number
     },
     roomType : {
         type : String

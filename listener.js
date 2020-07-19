@@ -7,9 +7,9 @@ require('dotenv').config();
 
 //self made modules
 const abi = require('./abi');
-const sendEmail = require("./email");
+const {sendEmail} = require("./email");
 const {allKeys} = require('./keys');
-const bookingModel = require('./model/booking');
+const bookingModel = require('./model/bookings');
 
 const allKeysObject = new allKeys();
 
@@ -25,7 +25,7 @@ const contract = new web3.eth.Contract(abi, process.env.CONTRACT_ADDRESS);
 
 //EVENT LISTENERS
 
-const eventListener = () => {
+const eventListener = function(){
 	//TESTING NEEDED
 	contract.events.customerPaidBookingAmount({fromBlock : process.env.BLOCK_NUMBER})
 		.on('data', event => {
@@ -59,7 +59,6 @@ const eventListener = () => {
 					const publicKey = allKeysObject.getKey(booking.hotelAddress)['private'];
 					const key = new nodeRSA(publicKey);
 					booking.status = "Hotel confirmed the booking";
-					booking.roomId = key.decrypt(event.returnValues.roomId);
 					booking.sendEmail = false;
 					await booking.save();
 
@@ -71,15 +70,16 @@ const eventListener = () => {
 					const email = booking.customerEmail;
 					const fullRefundDate = booking.fullRefundDate;
 					const roomNeeded = booking.roomNeeded;
-					if (emailSend == False){
+					if (emailSend == false){
 						const text = `Dear Customer your booking is conformed and have contract ID = ${contractId}\n`+
 						`with hotel with ethereum Address  =${hotelAddress}\n`+
-						`You are alloted ${roomNeeded} rooms from ${startDate} to ${endDate}\n`+
-						`You can cancel your booking till ...... \n`+
-						`In case of cancelling booking by hotel you will get this amount ${amount}\n`+
+						`You are alloted ${roomNeeded} rooms from ${startDate} \n to ${endDate}\n`+
+						`You can cancel your booking till ${endDate} \n`+
+						`In case of cancelling booking by hotel you will get this amount ${amount*process.env.ETHER_TO_RUPEE*Math.pow(10,-18)} rs\n`+
 						`You can recieve 95% refund on cancelling your booking till ${fullRefundDate}\n`+
 						`After that you can recive 40% refund till the date of your booking start`;
-						await sendEmail(email,text)
+						await sendEmail(email,text);
+						console.log('email send');
 						booking.emailSend = true;
 						booking.save();
 					}
@@ -94,21 +94,21 @@ const eventListener = () => {
 			console.log(event);
 			
 			const contractId = event.returnValues.contractId;
-			bookingModel.findOne(contractId)
+			bookingModel.findOne({contractId})
 				.then(async booking => {
 					booking.status = "cancelled by hotel";
 					booking.sendEmail = false;
 					await booking.save();
 					const to = booking.customerEmail;
 					const text = `Your booking with contractId ${contractId} is cancelled by hotel`+
-					`Your account is credited with amount ${amount} as a compensation`+
+					`Your account is credited with amount ${amount*process.env.ETHER_TO_RUPEE*Math.pow(10,-18)} as a compensation`+
 					`Sorry for inconvience`;
 					await sendEmail(to,text)
 					booking.emailSend = true;
 					booking.save();
 					
 				})
-				.catch(err => console.log(Err));
+				.catch(err => console.log(err));
 
 		})
 
@@ -117,11 +117,11 @@ const eventListener = () => {
 		.on('data', event => {
 			console.log(event);
 			const contractId = event.returnValues.contractId;
-			bookingModel.findOne(contractId)
+			bookingModel.findOne({contractId})
 				.then( async booking => {
 					booking.status = "cancelled by customer";
 					booking.sendEmail = false;
-					booking.save();
+					await booking.save();
 					const to = booking.customerEmail;
 					const text = `Your booking with contractId ${contractId} is cancelled by you`+
 					`Your account is credited with your refund amount.\n`+
@@ -130,7 +130,11 @@ const eventListener = () => {
 					booking.emailSend = true;
 					booking.save();
 				})
-				.catch(err => console.log(Err));
+				.catch(err => console.log(err));
 
 		})
+}
+
+module.exports=  {
+	eventListener
 }

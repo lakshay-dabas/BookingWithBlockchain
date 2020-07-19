@@ -1,8 +1,8 @@
 const { SMTPClient } = require('emailjs')
-
+require('dotenv').config();
 const client = new SMTPClient({
     user: 'ethereumblockchain01',
-    password: '',
+    password: `${process.env.EMAIL_PASSWORD}`,
     host: 'smtp.gmail.com',
     ssl: true,
 });
@@ -13,7 +13,7 @@ function sendEmail(to, text){
           text,
           from : 'Ethereum ethereumblockchain@gmail.com',
           to: `Vipin ${to}`,
-          subject: 'Testing emailjs',
+          subject: 'Booking With Blockchain BWB',
     },
       (err,msg) => {
           console.log(err);

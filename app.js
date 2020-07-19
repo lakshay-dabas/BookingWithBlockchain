@@ -28,9 +28,10 @@ mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser : true,useUnifiedTopolo
 
 //helper function 
 
-const eventListener = require('./listener');
+const {eventListener} = require('./listener');
+eventListener();
 const {allKeys} = require('./keys');
-const bookingModel = require('./model/booking');
+const bookingModel = require('./model/bookings');
 const allKeysObject = new allKeys();
 const publicKey = allKeysObject.getKey(process.env.HOTEL_ADDRESS)['public'];  //public key for encryption
 
@@ -67,8 +68,8 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         console.log(d2.toDateString())
         temp = d2.getTime() - d1.getTime()
         // console.log(temp)
-        const days = (d2.getTime() - d1.getTime())/(24*3600*1000);//PROBLEM
-
+        const days = (d2.getTime() - d1.getTime())/(24*3600*1000)+ 1;//PROBLEM
+        console.log('days '+days);
         if(d1 == 'Invalid Date'|| d2 == 'Invalid Date' || d1 >= d2 || d1 < Date.now() || d2 < Date.now()){
             res.redirect('index', {msg : 'Invalid Booking Dates'});
             return;
@@ -135,7 +136,7 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         const funcAbi = func.encodeABI();
         const o1 = {
             paymentAddress: process.env.CONTRACT_ADDRESS,
-            amountEth: amount*roomNeeded*0.000054, 
+            amountEth: amount*roomNeeded*process.env.CURRENCY, 
             funcAbi
         }
         socket.emit('sendMetamaskTransaction',o1);
@@ -158,7 +159,8 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         console.log('backend', contractId)
         try{
             const booking = await bookingModel.findOne({contractId});
-            if((!booking) || booking.status != "approve by hotel"){
+            console.log(booking)
+            if((!booking) || booking.status != "Hotel confirmed the booking"){
                 socket.emit('alert',{msg : 'No Active Contract with this contractId'});
                 return;
             }

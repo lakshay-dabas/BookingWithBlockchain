@@ -94,19 +94,8 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         }
         catch(err){
             console.log(err);
-            // res.redirect('index');
         }
-        // console.log(response)
-        // s = response.req._header
-        // console.log(s)
-        // console.log(response.statusCode)
-        // start = s.indexOf('email') + 7
-        // s = s.substr(start)
-        // end = s.indexOf('host')
-        // s = s.substr(0,end);
-        // s = s.trim()  //remove spaces from front and end
-        // console.log(s)
-        console.log(response.body);
+        // console.log(response.body);
 
         if(response.body.body == 'yes'){
             const obj = response.toJSON(response.body);
@@ -117,14 +106,8 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
         }
         //if not empty notify customer
         if(!haveRoom){
-            // res.render('index',{msg: `No room of ${roomType} type are empty right now...Sorry for inconvience`});
             return;
         }
-
-        //if emtpy:
-            //call smart contract bookRoom func
-                //bookRoom(startDate, endDate, typeOfRoom needed, hotelAddress)--send ether through metamask approval if customer
-        
         let amount = Number(price)*(days);
         console.log(amount)
         const key = new nodeRSA(publicKey);
@@ -140,17 +123,6 @@ io.on('connection', (socket) => {   // getting new connections from page havinig
             funcAbi
         }
         socket.emit('sendMetamaskTransaction',o1);
-        // if(!flag){
-        //     res.render('index',{msg : 'Please Install Metamask for payment on Ethereum Ropsten Test Network'})
-        // }
-        //we should listen to that event and notify customer for successfull booking
-
-        //we add that booking for that customer in our customer DB
-            //if new customer add new
-            //then, in booking array add the entry  
-
-        //roomID status is set to booked
-        
     })
 
 

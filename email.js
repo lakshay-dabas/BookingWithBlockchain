@@ -12,7 +12,7 @@ function sendEmail(to, text){
     {
           text,
           from : 'Ethereum ethereumblockchain@gmail.com',
-          to: `Vipin ${to}`,
+          to: `Customer ${to}`,
           subject: 'Booking With Blockchain BWB',
     },
       (err,msg) => {
@@ -22,7 +22,6 @@ function sendEmail(to, text){
   );
 }
 
-// sendEmail('vipinyadav1041998@gmail.com','HELLO VIPIN');
 module.exports = {
   sendEmail
 }
